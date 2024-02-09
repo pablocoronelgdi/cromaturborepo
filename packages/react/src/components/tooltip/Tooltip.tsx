@@ -1,47 +1,75 @@
-import React, { useEffect, useRef, useState } from 'react'
-import type { TooltipPropTypes } from './types'
-import { ToolTipContainer, getPositionStyles } from './styles'
-
+import React, { useRef, useState, useEffect } from 'react'
+import type { BorderPositions, TooltipPropTypes } from './types'
+import { TooltipContainer } from './styles'
+import { checkSpaceAndAdjust } from './functions'
 const Tooltip: React.FC<TooltipPropTypes> = ({
-  children,
+  position = 'right',
   label,
-  position = 'bottom'
+  children,
+  arrowPosition = 'middle'
 }) => {
-  const [isVisible, setIsVisible] = useState(false)
-  const containerRef = useRef<HTMLDivElement>(null)
+  const [isVisible, setIsVisible] = useState<boolean>(false)
+  const [adjustedPosition, setAdjustedPosition] = useState<BorderPositions>(position)
+  const [adjustedArrow, setAdjustedArrow] = useState<'start' | 'middle' | 'end'>(arrowPosition)
   const tooltipRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (isVisible && containerRef.current && tooltipRef.current) {
-      const positionStyles = getPositionStyles(position)
-      tooltipRef.current.style.top = positionStyles.top
+    if (isVisible) {
+      checkSpaceAndAdjust(
+        tooltipRef,
+        setAdjustedPosition,
+        setAdjustedArrow,
+        position,
+        adjustedPosition
+      )
+    } else {
+      setAdjustedPosition(position)
+      setAdjustedArrow(arrowPosition)
     }
-  }, [isVisible, location])
+
+    window.addEventListener('resize', () => {
+      checkSpaceAndAdjust(
+        tooltipRef,
+        setAdjustedPosition,
+        setAdjustedArrow,
+        position,
+        adjustedPosition
+      )
+    })
+    return () => {
+      window.removeEventListener('resize', () => {
+        checkSpaceAndAdjust(
+          tooltipRef,
+          setAdjustedPosition,
+          setAdjustedArrow,
+          position,
+          adjustedPosition
+        )
+      })
+    }
+  }, [position, isVisible])
 
   const showTooltip = (): void => {
     setIsVisible(true)
   }
-
   const hideTooltip = (): void => {
     setIsVisible(false)
   }
 
   return (
-    <ToolTipContainer
-      ref={containerRef}
-      className="tooltip-container"
+    <TooltipContainer
+      position={adjustedPosition}
+      arrowPosition={adjustedArrow}
       onMouseEnter={showTooltip}
       onMouseLeave={hideTooltip}
-      position={position}
-      label={label}
     >
       {children}
       {isVisible && (
-        <div ref={tooltipRef} className="tooltip">
-          {label}
+        <div className="croma_tooltip_text" ref={tooltipRef}>
+          <span>{label}</span>
         </div>
       )}
-    </ToolTipContainer>
+    </TooltipContainer>
   )
 }
 

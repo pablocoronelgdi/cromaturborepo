@@ -25,7 +25,7 @@
   "type": "module",
   "scripts": {
     "build": "rollup -c",
-    "dev": "yarn build --watch"
+    "dev": "npm run build --watch"
   },
   "publishConfig": {
     "access": "public"
