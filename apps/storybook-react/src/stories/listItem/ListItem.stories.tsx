@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { ListItem, RoundedImage, Switch, Radio, Checkbox, Link, Icon } from '@cromaui/react'
 
 const meta: Meta<typeof Image> = {
-  title: 'ListItem',
+  title: 'Data Display/ListItem',
   component: ListItem,
   tags: ['autodocs'],
   argTypes: {
