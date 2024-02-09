@@ -1,20 +1,17 @@
 {
   "name": "@cromaui/foundations",
-  "author": "garaje_de_ideas",
-  "private": true,
-  "version": "1.1.6",
+  "version": "1.2.0",
   "description": "",
   "main": "dist/index.js",
-  "type": "module",
   "scripts": {
     "build": "tsc",
-    "dev": "npm run build -w"
+    "dev": "yarn build -w"
   },
   "keywords": [],
+  "author": "",
   "license": "ISC",
   "devDependencies": {
-    "typescript": "^5.3.2",
-    "@cromaui/typescript-config": "*"
+    "typescript": "^5.3.2"
   },
   "publishConfig": {
     "access": "public"
